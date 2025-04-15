@@ -1,5 +1,8 @@
 package com.mycompany.londonpostcodemanager.avlTree;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class avlTree {
     private class avlNode {
         String key;
@@ -89,4 +92,17 @@ public class avlTree {
     }
 
     // 5. Return postcodes in order
+    public String[] inOrder() {
+        List<String> result = new ArrayList<>();
+        inOrderTraversal(root, result);
+        return result.toArray(new String[0]);
+    }
+
+    private void inOrderTraversal(avlNode node, List<String> result) {
+        if (node != null) {
+            inOrderTraversal(node.left, list);
+            list.add(node.key);
+            inOrderTraversal(node.right, list);
+        }
+    }
 }
