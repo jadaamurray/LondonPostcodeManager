@@ -47,17 +47,13 @@ public class MinimumHeap {
     }
 
     public String[] InOrder() {
-        MinimumHeap copy = new MinimumHeap(maxSize);
-        for (int i = 0; i < size; i++) {
-            copy.Insert(heap[i]);
-        }
-
         String[] sorted = new String[size];
         for (int i = 0; i < sorted.length; i++) {
-            sorted[i] = copy.ExtractMinimum();
+            sorted[i] = ExtractMinimum(); // This mutates the actual heap
         }
         return sorted;
     }
+
 
     private void siftUp(int index) {
         int parent = (index - 1) / 2;
