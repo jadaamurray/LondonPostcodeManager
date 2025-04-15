@@ -1,4 +1,4 @@
-package minimumHeap;
+package com.mycompany.londonpostcodemanager.minimumHeap;
 
 public class MinimumHeap {
     private String[] heap;
