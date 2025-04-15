@@ -16,6 +16,9 @@ public class MinimumHeap {
     }
 
     public void Insert(String postcode) {
+        if (postcode == null || postcode.trim().isEmpty())
+            throw new IllegalArgumentException("Invalid postcode.");
+
         if (size >= maxSize) {
             throw new IllegalStateException("Cannot insert: Heap is full.");
         }
