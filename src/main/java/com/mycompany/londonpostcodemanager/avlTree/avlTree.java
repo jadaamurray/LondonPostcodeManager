@@ -105,4 +105,90 @@ public class avlTree {
             inOrderTraversal(node.right, list);
         }
     }
+
+    // Helper methods
+
+    private int height(avlNode node) {
+        return node == null ? 0 : node.height;
+    }
+
+    private int getBalance(avlNode node) {
+        return node == null ? 0 : height(node.left) - height(node.right);
+    }
+
+    private avlNode rightRotate(avlNode node) {
+        avlNode x = y.left;
+        avlNode T2 = x.right;
+
+        x.right = y;
+        y.left = T2;
+
+        y.height = 1 + Math.max(height(y.left), height(y.right));
+        x.height = 1 + Math.max(height(x.left), height(x.right));
+
+        return x;
+    }
+
+    private avlNode leftRotate(avlNode x) {
+        avlNode y = x.right;
+        avlNode T2 = y.left;
+
+        y.left = x;
+        x.right = T2;
+
+        x.height = 1 + Math.max(height(x.left), height(x.right));
+        y.height = 1 + Math.max(height(y.left), height(y.right));
+
+        return y;
+    }
+
+    private avlNode rebalance(avlNode node, String key) {
+        int balance = getBalance(node);
+
+        if (balance > 1 && key.compareTo(node.left.key) < 0)
+            return rightRotate(node);
+
+        if (balance < -1 && key.compareTo(node.right.key) > 0)
+            return leftRotate(node);
+
+        if (balance > 1 && key.compareTo(node.left.key) > 0) {
+            node.left = leftRotate(node.left);
+            return rightRotate(node);
+        }
+
+        if (balance < -1 && key.compareTo(node.right.key) < 0) {
+            node.right = rightRotate(node.right);
+            return leftRotate(node);
+        }
+
+        return node;
+    }
+
+    private avlNode rebalanceAfterDelete(avlNode node) {
+        int balance = getBalance(node);
+
+        if (balance > 1 && getBalance(node.left) >= 0)
+            return rightRotate(node);
+
+        if (balance > 1 && getBalance(node.left) < 0) {
+            node.left = leftRotate(node.left);
+            return rightRotate(node);
+        }
+
+        if (balance < -1 && getBalance(node.right) <= 0)
+            return leftRotate(node);
+
+        if (balance < -1 && getBalance(node.right) > 0) {
+            node.right = rightRotate(node.right);
+            return leftRotate(node);
+        }
+
+        return node;
+    }
+
+    private avlNode minValueNode(avlNode node) {
+        avlNode current = node;
+        while (current.left != null) current = current.left;
+        return current;
+    }
 }
