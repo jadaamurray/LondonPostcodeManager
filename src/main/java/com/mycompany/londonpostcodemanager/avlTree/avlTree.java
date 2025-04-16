@@ -5,13 +5,13 @@ import java.util.List;
 
 public class avlTree {
     private class avlNode {
-        String key;
+        String postcode;
         int height;
         avlNode left;
         avlNode right;
 
-        avlNode(String key) {
-            this.key = key;
+        avlNode(String postcode) {
+            this.postcode = postcode;
             this.height = 1;
         }
     }
@@ -34,61 +34,62 @@ public class avlTree {
     }
 
     // 2. insert postcode
-    public void insert(String key) {
-        this.root = insert(this.root, key);
+    public void insert(String postcode) {
+        if (!Search(postcode)) {
+            this.root = insert(this.root, postcode);
+        }
     }
 
-    private avlNode insert (avlNode node, String key) {
-       if (node == null) return new avlNode(key);
+    private avlNode insert(avlNode node, String postcode) {
+        if (node == null) return new avlNode(postcode);
 
-       int cmp = key.compareTo(node.key);
-        if (cmp < 0) node.left = insert(node.left, key);
-       else if (key.compareTo(node.key) > 0) node.right = insert(node.right, key);
-       else return node; // duplicate, do not insert
+        int cmp = postcode.compareTo(node.postcode);
+        if (cmp < 0) node.left = insert(node.left, postcode);
+        else if (cmp > 0) node.right = insert(node.right, postcode);
+        else return node; // duplicate, do not insert
 
-        node.height = 1 + Math.max(countNodes(node.left), countNodes(node.right))
-        return rebalance(node, key);
+        node.height = 1 + Math.max(height(node.left), height(node.right));
+        return rebalance(node, postcode);
     }
 
     // 3. Delete postcode
-    public boolean delete(String key) {
-        if (!Search(key)) return false;
-        root = delete(root, key);
+    public boolean delete(String postcode) {
+        if (!Search(postcode)) return false;
+        root = delete(root, postcode);
         return true;
     }
 
-    private avlNode delete(avlNode node, String key) {
+    private avlNode delete(avlNode node, String postcode) {
         if (node == null) return null;
 
-        int cmp = key.compareTo(node.key);
-        if (cmp < 0) node.left = delete(node.left, key);
-        else if (cmp > 0) node.right = delete(node.right, key);
+        int cmp = postcode.compareTo(node.postcode);
+        if (cmp < 0) node.left = delete(node.left, postcode);
+        else if (cmp > 0) node.right = delete(node.right, postcode);
         else {
-            if (node.left == null && node.right == null) {
-                node = (node.left == null ? node.right : node.left);
-            } else {
-                avlNode successor = minValueNode(node.right);
-                node.key = successor.key;
-                node.right = delete(node.right, successor.key);
-            }
+            if (node.left == null) return node.right;
+            else if (node.right == null) return node.left;
+
+            avlNode successor = minValueNode(node.right);
+            node.postcode = successor.postcode;
+            node.right = delete(node.right, successor.postcode);
         }
 
-        if (node == null) return null;
-        node.height = 1 + Math.max(countNodes(node.left), countNodes(node.right));
+        node.height = 1 + Math.max(height(node.left), height(node.right));
         return rebalanceAfterDelete(node);
     }
 
     // 4. Search postcode
-    public boolean Search(String key) {
-        return search(root, key);
+    public boolean Search(String postcode) {
+        return search(root, postcode);
     }
 
-    private boolean search(avlNode node, String key) {
+    private boolean search(avlNode node, String postcode) {
         if (node == null) return false;
 
-        int cmp = key.compareTo(node.key);
+        int cmp = postcode.compareTo(node.postcode);
         if (cmp == 0) return true;
-        return cmp < 0 && search(node.left, key);
+        else if (cmp < 0) return search(node.left, postcode);
+        else return search(node.right, postcode);
     }
 
     // 5. Return postcodes in order
@@ -98,10 +99,10 @@ public class avlTree {
         return result.toArray(new String[0]);
     }
 
-    private void inOrderTraversal(avlNode node, List<String> result) {
+    private void inOrderTraversal(avlNode node, List<String> list) {
         if (node != null) {
             inOrderTraversal(node.left, list);
-            list.add(node.key);
+            list.add(node.postcode);
             inOrderTraversal(node.right, list);
         }
     }
@@ -116,7 +117,7 @@ public class avlTree {
         return node == null ? 0 : height(node.left) - height(node.right);
     }
 
-    private avlNode rightRotate(avlNode node) {
+    private avlNode rightRotate(avlNode y) {
         avlNode x = y.left;
         avlNode T2 = x.right;
 
@@ -142,21 +143,21 @@ public class avlTree {
         return y;
     }
 
-    private avlNode rebalance(avlNode node, String key) {
+    private avlNode rebalance(avlNode node, String postcode) {
         int balance = getBalance(node);
 
-        if (balance > 1 && key.compareTo(node.left.key) < 0)
+        if (balance > 1 && postcode.compareTo(node.left.postcode) < 0)
             return rightRotate(node);
 
-        if (balance < -1 && key.compareTo(node.right.key) > 0)
+        if (balance < -1 && postcode.compareTo(node.right.postcode) > 0)
             return leftRotate(node);
 
-        if (balance > 1 && key.compareTo(node.left.key) > 0) {
+        if (balance > 1 && postcode.compareTo(node.left.postcode) > 0) {
             node.left = leftRotate(node.left);
             return rightRotate(node);
         }
 
-        if (balance < -1 && key.compareTo(node.right.key) < 0) {
+        if (balance < -1 && postcode.compareTo(node.right.postcode) < 0) {
             node.right = rightRotate(node.right);
             return leftRotate(node);
         }
