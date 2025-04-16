@@ -6,11 +6,25 @@ public class BinarySearchTree {
 
     private class Node {
         private String postcode;
-        Node left, right;
+        Node parent, left, right;
 
         public Node(String postcode) {
             this.postcode = postcode;
             this.left = this.right = null;
+            this.parent = null;
+        }
+    }
+
+    // private helper class for search results
+    private static class SearchResult {
+        final Node node;
+        final Node parent;
+        final boolean isLeft;
+
+        SearchResult(Node node, Node parent, boolean isLeft) {
+            this.node = node;
+            this.parent = parent;
+            this.isLeft = isLeft;
         }
     }
 
@@ -25,61 +39,115 @@ public class BinarySearchTree {
 
     public void insert(String postcode) {
         validPostcodeCheck(postcode);
-        if (root == null) {
+
+        if (root == null) { // if tree is empty, insert at the root
             root = new Node(postcode);
-            this.size ++;
+            this.size++;
             return;
         }
-        Node current = root, parent = null; // starting at the root
-        while (current != null) {
-            parent = current;
-            int cmp = postcode.compareTo(current.postcode);
-            if (cmp == 0) { // postcode to insert is already in the tree
-                System.out.println("Postcode " + postcode + " already exists");
-                return;
-            } else if (cmp < 0) { // if postcode is smaller than the current node, move to the left
-                current = current.left;
-            } else { // if bigger, move to the right
-                current = current.right;
-            }
+
+        SearchResult result = searchWithParent(postcode);
+
+        // If postcode exists already
+        if (result.node != null && result.node.postcode.equals(postcode)) {
+            System.out.println("Postcode " + postcode + " already exists");
+            return;
         }
-        Node newNode = new Node(postcode); // creating new node and linking it to the tree
-        int cmp = postcode.compareTo(current.postcode);
+
+        // creating new node and linking it to the tree
+        Node newNode = new Node(postcode);
+        newNode.parent = result.parent;
+        int cmp = postcode.compareTo(result.parent.postcode);
         if (cmp < 0) {
-            parent.left = newNode;
+            result.parent.left = newNode;
         } else if (cmp > 0) {
-            parent.right = newNode;
+            result.parent.right = newNode;
         }
         this.size++;
     }
 
     public boolean search(String postcode) {
         validPostcodeCheck(postcode);
-        if (root == null) {
-            System.out.println("Tree is empty");
-            return false;
-        }
-        Node current = root, parent = null;
-        while (!current.postcode.equals(postcode)) {
+        Node current = root;
+        while (current != null) {
             int cmp = postcode.compareTo(current.postcode);
             if (cmp == 0) {
                 return true;
-            } else if (cmp < 0) {
-                parent = current;
+            } else if (cmp < 0) { // if postcode is smaller than the current node, move to the left
                 current = current.left;
-            } else if (cmp > 0) {
-                parent = current;
-                current = current.right;
+            } else {
+                current = current.right; // if bigger, move to the right
             }
         }
         return false;
     }
 
+    private SearchResult searchWithParent(String postcode) {
+        validPostcodeCheck(postcode);
+        Node current = root;
+        Node parent = null;
+        boolean isLeft = false;
+
+        while (current != null) {
+            int cmp = postcode.compareTo(current.postcode);
+            if (cmp == 0) {
+                return new SearchResult(current, parent, isLeft); // postcode found
+            }
+
+            parent = current;
+            if (cmp < 0) { // if postcode is smaller than the current node, move to the left
+                current = current.left;
+                isLeft = true;
+            } else {
+                current = current.right; // if bigger, move to the right
+                isLeft = false;
+            }
+        }
+        // If not found, return the parent where it should be inserted
+        return new SearchResult(null, parent, isLeft); // not found
+    }
+
     public boolean delete(String postcode) {
+        validPostcodeCheck(postcode);
+        SearchResult result = searchWithParent(postcode);
+        if (result == null) { // postcode to delete not found
+            return false;
+        }
+
+        Node toDelete = result.node;
+        Node parent = result.parent;
+
+        // Node has no children
+        if (toDelete.left == null && toDelete.right == null) {
+            if (parent == null) {
+                root = null; // Deleting the root
+            } else if (result.isLeft) {
+                parent.left = null;
+            } else {
+                parent.right = null;
+            }
+            return true;
+        }
+        return false;
+        //
+
+
+
+        /*int cmp = postcode.compareTo(result.parent.postcode);
+        if (result.node.postcode.equals(postcode)) {
+            if (cmp < 0) { // if postcode to delete is on the left of the parent (smaller)
+                result.parent.left = null;
+            } else {
+                result.parent.right = null;
+            }
+            this.size--;
+        }*/
+
 
     }
 
-    private void traverse(Node current) {}
+    private void traverse(Node current) {
+    }
 
     public void validPostcodeCheck(String postcode) {
         if (postcode == null) {
