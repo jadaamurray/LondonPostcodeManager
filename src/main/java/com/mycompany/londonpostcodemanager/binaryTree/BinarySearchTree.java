@@ -137,11 +137,13 @@ public class BinarySearchTree {
         // node has no children
         if (toDelete.left == null && toDelete.right == null) {
             if (parent == null) {
-                root = null; // Deleting the root
+                this.root = null; // Deleting the root
             } else if (result.isLeft) {
                 parent.left = null;
+                toDelete.postcode = null;
             } else {
                 parent.right = null;
+                toDelete.postcode = null;
             }
 
         // node has one child
@@ -151,8 +153,10 @@ public class BinarySearchTree {
                 root = child; // setting root to the only child
             } else if (result.isLeft) {
                 parent.left = child;
+                child.parent = null;
             } else {
                 parent.right = child;
+                child.parent = null;
             }
             child.parent = parent;
         }
@@ -188,9 +192,9 @@ public class BinarySearchTree {
 
     private void inOrderTraversal(Node node, List<String> result) {
         if (node != null) {
-            inOrderTraversal(node.left, result);  // 1. Visit left subtree
-            result.add(node.postcode);            // 2. Visit current node
-            inOrderTraversal(node.right, result); // 3. Visit right subtree
+            inOrderTraversal(node.left, result);  // visit left subtree
+            result.add(node.postcode);            // visit current node
+            inOrderTraversal(node.right, result); // visit right subtree
         }
     }
 
