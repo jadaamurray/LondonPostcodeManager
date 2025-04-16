@@ -1,5 +1,8 @@
 package com.mycompany.londonpostcodemanager.binaryTree;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BinarySearchTree {
     private Node root;
     private int size;
@@ -46,12 +49,16 @@ public class BinarySearchTree {
             return;
         }
 
-        SearchResult result = searchWithParent(postcode);
+        SearchResult result = findNodeAndParent(postcode);
 
         // If postcode exists already
         if (result.node != null && result.node.postcode.equals(postcode)) {
             System.out.println("Postcode " + postcode + " already exists");
             return;
+        }
+
+        if (result.parent == null) {
+            throw new IllegalStateException("Parent cannot be null for non-root insertion");
         }
 
         // creating new node and linking it to the tree
@@ -81,8 +88,8 @@ public class BinarySearchTree {
         }
         return false;
     }
-
-    private SearchResult searchWithParent(String postcode) {
+    // private method for search results that returns the node, parent, and if the
+    private SearchResult findNodeAndParent(String postcode) {
         validPostcodeCheck(postcode);
         Node current = root;
         Node parent = null;
@@ -107,17 +114,27 @@ public class BinarySearchTree {
         return new SearchResult(null, parent, isLeft); // not found
     }
 
+    private SearchResult findMinWithParent(Node start, Node parent) {
+        boolean isLeftChild = false;
+        while (start.left != null) {
+            parent = start;
+            start = start.left;
+            isLeftChild = true;
+        }
+        return new SearchResult(start, parent, isLeftChild);
+    }
+
     public boolean delete(String postcode) {
         validPostcodeCheck(postcode);
-        SearchResult result = searchWithParent(postcode);
-        if (result == null) { // postcode to delete not found
+        SearchResult result = findNodeAndParent(postcode);
+        if (result.node == null) { // postcode to delete not found
             return false;
         }
 
         Node toDelete = result.node;
         Node parent = result.parent;
 
-        // Node has no children
+        // node has no children
         if (toDelete.left == null && toDelete.right == null) {
             if (parent == null) {
                 root = null; // Deleting the root
@@ -126,30 +143,58 @@ public class BinarySearchTree {
             } else {
                 parent.right = null;
             }
-            return true;
-        }
-        return false;
-        //
 
-
-
-        /*int cmp = postcode.compareTo(result.parent.postcode);
-        if (result.node.postcode.equals(postcode)) {
-            if (cmp < 0) { // if postcode to delete is on the left of the parent (smaller)
-                result.parent.left = null;
+        // node has one child
+        } else if (toDelete.left == null || toDelete.right == null) {
+            Node child = (toDelete.left != null) ? toDelete.left : toDelete.right;
+            if (parent == null) {
+                root = child; // setting root to the only child
+            } else if (result.isLeft) {
+                parent.left = child;
             } else {
-                result.parent.right = null;
+                parent.right = child;
             }
-            this.size--;
-        }*/
+            child.parent = parent;
+        }
+        // node has two children
+        else {
+            // Find successor (minimum in right subtree)
+            SearchResult successorResult = findMinWithParent(toDelete.right, toDelete);
+            Node successor = successorResult.node;
 
+            // Copy successor's data
+            toDelete.postcode = successor.postcode;
 
+            // Delete the successor (which has at most one right child)
+            if (successorResult.isLeft) {
+                successorResult.parent.left = successor.right;
+            } else {
+                successorResult.parent.right = successor.right;
+            }
+
+            if (successor.right != null) {
+                successor.right.parent = successorResult.parent;
+            }
+        }
+        this.size--;
+        return true;
     }
 
-    private void traverse(Node current) {
+    public String[] inOrder() {
+        List<String> result = new ArrayList<>();
+        inOrderTraversal(root, result);
+        return result.toArray(new String[0]);
     }
 
-    public void validPostcodeCheck(String postcode) {
+    private void inOrderTraversal(Node node, List<String> result) {
+        if (node != null) {
+            inOrderTraversal(node.left, result);  // 1. Visit left subtree
+            result.add(node.postcode);            // 2. Visit current node
+            inOrderTraversal(node.right, result); // 3. Visit right subtree
+        }
+    }
+
+    private void validPostcodeCheck(String postcode) {
         if (postcode == null) {
             throw new IllegalArgumentException("postcode cannot be null");
         }
