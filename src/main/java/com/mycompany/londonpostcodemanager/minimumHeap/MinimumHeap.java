@@ -1,43 +1,51 @@
 package com.mycompany.londonpostcodemanager.minimumHeap;
 
-public class MinimumHeap {
+import com.mycompany.londonpostcodemanager.shared.PostcodeManagerInterface;
+
+public class MinimumHeap implements PostcodeManagerInterface {
+
     private String[] heap;
     private int size;
-    private int maxSize;
+    private final int maxSize;
 
+    // Constructor to initialize an empty heap
     public MinimumHeap(int maxSize) {
         this.maxSize = maxSize;
         this.size = 0;
         this.heap = new String[maxSize];
     }
 
-    public int Count() {
+    // Returns the number of postcodes currently in the heap
+    @Override
+    public int count() {
         return size;
     }
 
-    public void Insert(String postcode) {
-        if (postcode == null || postcode.trim().isEmpty())
+    // Inserts a postcode into the heap and maintains heap property
+    @Override
+    public void insert(String postcode) {
+        if (postcode == null || postcode.trim().isEmpty()) {
             throw new IllegalArgumentException("Invalid postcode.");
+        }
 
         if (size >= maxSize) {
             throw new IllegalStateException("Cannot insert: Heap is full.");
         }
 
         heap[size] = postcode;
-        siftUp(size);
+        heapifyUp(size);
         size++;
     }
-    public String ExtractMinimum() {
-        if (size == 0) return null;
 
-        String min = heap[0];
-        heap[0] = heap[size - 1];
-        size--;
-        siftDown(0);
-        return min;
+    // Deletes and returns the minimum (alphabetically first) postcode
+    @Override
+    public String delete() {
+        return extractMinimum();
     }
 
-    public boolean Search(String postcode) {
+    // Returns true if the given postcode is found in the heap
+    @Override
+    public boolean search(String postcode) {
         for (int i = 0; i < size; i++) {
             if (heap[i].equalsIgnoreCase(postcode)) {
                 return true;
@@ -46,16 +54,29 @@ public class MinimumHeap {
         return false;
     }
 
-    public String[] InOrder() {
+    // Returns all postcodes in alphabetical order and clears the heap
+    @Override
+    public String[] inOrder() {
         String[] sorted = new String[size];
         for (int i = 0; i < sorted.length; i++) {
-            sorted[i] = ExtractMinimum(); // This mutates the actual heap
+            sorted[i] = extractMinimum(); // Mutates the heap
         }
         return sorted;
     }
 
+    // Removes and returns the root (minimum) element, then re-heapifies
+    private String extractMinimum() {
+        if (size == 0) return null;
 
-    private void siftUp(int index) {
+        String min = heap[0];
+        heap[0] = heap[size - 1];
+        size--;
+        heapifyDown(0);
+        return min;
+    }
+
+    // Restores heap order from bottom to top after insert
+    private void heapifyUp(int index) {
         int parent = (index - 1) / 2;
         while (index > 0 && heap[index].compareTo(heap[parent]) < 0) {
             swap(index, parent);
@@ -64,7 +85,8 @@ public class MinimumHeap {
         }
     }
 
-    private void siftDown(int index) {
+    // Restores heap order from top to bottom after delete
+    private void heapifyDown(int index) {
         int smallest = index;
         int left = 2 * index + 1;
         int right = 2 * index + 2;
@@ -77,10 +99,11 @@ public class MinimumHeap {
         }
         if (smallest != index) {
             swap(index, smallest);
-            siftDown(smallest);
+            heapifyDown(smallest);
         }
     }
 
+    // Swaps elements at two indices in the heap
     private void swap(int i, int j) {
         String temp = heap[i];
         heap[i] = heap[j];
