@@ -1,5 +1,6 @@
 package com.mycompany.londonpostcodemanager.shared;
 
-public interface ExtractablePostcodeManager {
+public interface ExtractablePostcodeManager extends PostcodeManagerInterface {
     String extractMinimum();
 }
+

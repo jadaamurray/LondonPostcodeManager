@@ -3,8 +3,8 @@ package com.mycompany.londonpostcodemanager;
 import com.mycompany.londonpostcodemanager.shared.PostcodeManagerInterface;
 import com.mycompany.londonpostcodemanager.terminal.TerminalMenu;
 import com.mycompany.londonpostcodemanager.minimumHeap.MinimumHeap;
-// import com.mycompany.londonpostcodemanager.bst.BSTImplementation;
-// import com.mycompany.londonpostcodemanager.avl.AVLImplementation;
+import com.mycompany.londonpostcodemanager.avlTree.AvlTree;
+import com.mycompany.londonpostcodemanager.binaryTree.BinarySearchTree;
 
 import java.util.Scanner;
 
@@ -28,17 +28,33 @@ public class LondonPostcodeManager {
 
         switch (choice) {
             case "1" -> {
-                // manager = new BSTImplementation();
-                System.out.println("BST selected. (Not yet implemented)");
+                manager = new BinarySearchTree();
+                System.out.println("Binary Search Tree selected (BST)");
             }
             case "2" -> {
-                // manager = new AVLImplementation();
-                System.out.println("AVL Tree selected. (Not yet implemented)");
+                manager = new AvlTree(); //  Assign the AVL Tree implementation
+                System.out.println("AVL Tree selected.");
             }
             case "3" -> {
-                manager = new MinimumHeap(20000);
-                System.out.println("Minimum Heap selected.");
+                System.out.print("Enter max heap size (default is 20000): ");
+                String input = scanner.nextLine().trim();
+
+                int heapSize;
+                try {
+                    heapSize = Integer.parseInt(input);
+                    if (heapSize <= 0) {
+                        System.out.println("Invalid input. Using default size 20000.");
+                        heapSize = 20000;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Using default size 20000.");
+                    heapSize = 20000;
+                }
+
+                manager = new MinimumHeap(heapSize);
+                System.out.println("Minimum Heap selected with size " + heapSize + ".");
             }
+
             default -> {
                 System.out.println("Invalid input. Please restart and choose 1, 2, or 3.");
                 return;

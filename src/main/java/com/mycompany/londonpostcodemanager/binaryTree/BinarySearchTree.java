@@ -1,9 +1,10 @@
 package com.mycompany.londonpostcodemanager.binaryTree;
+import com.mycompany.londonpostcodemanager.shared.DeletablePostcodeManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BinarySearchTree {
+public class BinarySearchTree implements DeletablePostcodeManager {
     private Node root;
     private int size;
 
@@ -36,10 +37,12 @@ public class BinarySearchTree {
         this.size = 0;
     }
 
+    @Override
     public int count() {
         return size;
     }
 
+    @Override
     public void insert(String postcode) {
         validPostcodeCheck(postcode);
 
@@ -73,6 +76,7 @@ public class BinarySearchTree {
         this.size++;
     }
 
+    @Override
     public boolean search(String postcode) {
         validPostcodeCheck(postcode);
         Node current = root;
@@ -124,6 +128,7 @@ public class BinarySearchTree {
         return new SearchResult(start, parent, isLeftChild);
     }
 
+    @Override
     public boolean delete(String postcode) {
         validPostcodeCheck(postcode);
         SearchResult result = findNodeAndParent(postcode);
@@ -183,6 +188,7 @@ public class BinarySearchTree {
         return true;
     }
 
+    @Override
     public String[] inOrder() {
         List<String> result = new ArrayList<>();
         inOrderTraversal(root, result);
@@ -201,25 +207,5 @@ public class BinarySearchTree {
         if (postcode == null) {
             throw new IllegalArgumentException("postcode cannot be null");
         }
-        /*// London postcode regex pattern
-        String pattern = "^([A-Z][A-HJ-Y]?\\d[A-Z\\d]? ?\\d[A-Z]{2}|GIR ?0A{2})$";
-        pattern londonPostcodePattern = pattern.compile(pattern, pattern.CASE_INSENSITIVE);
-
-        // Basic format check
-        if (!londonPostcodePattern.matcher(postcode).matches()) {
-            return false;
-        }
-        String outwardCode = postcode.split(" ")[0].toUpperCase();
-        String[] londonDistricts = {
-                "E", "EC", "N", "NW", "SE", "SW", "W", "WC",
-                "BR", "CR", "DA", "EN", "HA", "IG", "KT", "RM",
-                "SM", "TW", "UB", "WD"
-        };
-
-        for (String district : londonDistricts) {
-            if (outwardCode.startsWith(district)) {
-                return true;
-            }
-        } */
     }
 }

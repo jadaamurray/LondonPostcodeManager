@@ -1,9 +1,11 @@
 package com.mycompany.londonpostcodemanager.avlTree;
+import com.mycompany.londonpostcodemanager.shared.DeletablePostcodeManager;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class avlTree {
+public class AvlTree implements DeletablePostcodeManager {
     private class avlNode {
         String postcode;
         int height;
@@ -19,12 +21,13 @@ public class avlTree {
     private avlNode root;
 
     // constructor
-    public avlTree() {
+    public AvlTree() {
         this.root = null;
     }
 
     // 1. count postcodes
-    public int Count() {
+    @Override
+    public int count() {
         return countNodes(root);
     }
 
@@ -34,10 +37,19 @@ public class avlTree {
     }
 
     // 2. insert postcode
+    @Override
     public void insert(String postcode) {
-        if (!Search(postcode)) {
-            this.root = insert(this.root, postcode);
+        if (postcode == null || postcode.trim().isEmpty()) {
+            throw new IllegalArgumentException("Postcode cannot be null or empty.");
         }
+
+        if (!search(postcode)) {
+            root = insert(root, postcode);
+            System.out.println("Postcode added.");
+        } else {
+            System.out.println("Postcode " + postcode + " already exists");
+        }
+
     }
 
     private avlNode insert(avlNode node, String postcode) {
@@ -53,8 +65,9 @@ public class avlTree {
     }
 
     // 3. Delete postcode
+    @Override
     public boolean delete(String postcode) {
-        if (!Search(postcode)) return false;
+        if (!search(postcode)) return false;
         root = delete(root, postcode);
         return true;
     }
@@ -82,7 +95,8 @@ public class avlTree {
     }
 
     // 4. Search postcode
-    public boolean Search(String postcode) {
+    @Override
+    public boolean search(String postcode) {
         return search(root, postcode);
     }
 
@@ -96,6 +110,7 @@ public class avlTree {
     }
 
     // 5. Return postcodes in order
+    @Override
     public String[] inOrder() {
         List<String> result = new ArrayList<>();
         inOrderTraversal(root, result);

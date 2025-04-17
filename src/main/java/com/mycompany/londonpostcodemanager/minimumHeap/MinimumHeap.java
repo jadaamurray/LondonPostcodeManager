@@ -1,8 +1,8 @@
 package com.mycompany.londonpostcodemanager.minimumHeap;
 
-import com.mycompany.londonpostcodemanager.shared.PostcodeManagerInterface;
+import com.mycompany.londonpostcodemanager.shared.ExtractablePostcodeManager;
 
-public class MinimumHeap implements PostcodeManagerInterface {
+public class MinimumHeap implements ExtractablePostcodeManager {
 
     private String[] heap;
     private int size;
@@ -31,10 +31,14 @@ public class MinimumHeap implements PostcodeManagerInterface {
         if (size >= maxSize) {
             throw new IllegalStateException("Cannot insert: Heap is full.");
         }
-
-        heap[size] = postcode;
-        heapifyUp(size);
-        size++;
+        if (search(postcode)) {
+            System.out.println("Postcode " + postcode + " already exists");
+        } else {
+            heap[size] = postcode;
+            heapifyUp(size);
+            size++;
+            System.out.println("Postcode added.");
+        }
     }
 
     // Deletes and returns the minimum (alphabetically first) postcode

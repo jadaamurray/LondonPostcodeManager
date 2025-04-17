@@ -1,8 +1,8 @@
 package com.mycompany.londonpostcodemanager.avlTree;
 
-public class avlTreeTest {
+public class AvlTreeTest {
     public static void main(String[] args) {
-        avlTree tree = new avlTree();
+        AvlTree tree = new AvlTree();
 
         // Insert postcodes
         tree.insert("W1A 1AA");
@@ -15,11 +15,11 @@ public class avlTreeTest {
         tree.insert("W1A 1AA"); // should not be added again
 
         // Search
-        System.out.println("Search 'SW1A 1AA': " + tree.Search("SW1A 1AA")); // true
-        System.out.println("Search 'XYZ 123': " + tree.Search("XYZ 123"));   // false
+        System.out.println("Search 'SW1A 1AA': " + tree.search("SW1A 1AA")); // true
+        System.out.println("Search 'XYZ 123': " + tree.search("XYZ 123"));   // false
 
         // Count
-        System.out.println("Total postcodes: " + tree.Count()); // should be 5 (no duplicate)
+        System.out.println("Total postcodes: " + tree.count()); // should be 5 (no duplicate)
 
         // In-order traversal
         String[] sortedPostcodes = tree.inOrder();
@@ -36,6 +36,6 @@ public class avlTreeTest {
         }
 
         // Final count
-        System.out.println("Final postcode count: " + tree.Count());
+        System.out.println("Final postcode count: " + tree.count());
     }
 }

@@ -51,7 +51,6 @@ public class TerminalMenu {
                     } else {
                         try {
                             manager.insert(toAdd);
-                            System.out.println("Postcode added.");
                         } catch (Exception e) {
                             System.out.println("Error: " + e.getMessage());
                         }

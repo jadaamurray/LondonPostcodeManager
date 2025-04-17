@@ -7,6 +7,4 @@ public interface PostcodeManagerInterface {
     int count();
     String[] inOrder();
 
-    // Removes and returns the root (minimum) element, then re-heapifies
-    String extractMinimum();
 }
