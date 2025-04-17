@@ -63,12 +63,15 @@ public class avlTree {
         if (node == null) return null;
 
         int cmp = postcode.compareTo(node.postcode);
-        if (cmp < 0) node.left = delete(node.left, postcode);
-        else if (cmp > 0) node.right = delete(node.right, postcode);
+        if (cmp < 0) node.left = delete(node.left, postcode); // search left
+        else if (cmp > 0) node.right = delete(node.right, postcode); // search right
         else {
+            // case 1: node has no left child
             if (node.left == null) return node.right;
+            // case 2: node has no right child
             else if (node.right == null) return node.left;
 
+            // case 3: node has two children
             avlNode successor = minValueNode(node.right);
             node.postcode = successor.postcode;
             node.right = delete(node.right, successor.postcode);
