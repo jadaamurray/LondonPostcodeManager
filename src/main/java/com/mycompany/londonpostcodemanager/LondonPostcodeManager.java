@@ -9,8 +9,8 @@ package com.mycompany.londonpostcodemanager;
  * @author jadamurray
  */
 public class LondonPostcodeManager {
-
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+
     }
+
 }
