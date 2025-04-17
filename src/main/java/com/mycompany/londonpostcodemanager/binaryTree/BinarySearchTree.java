@@ -7,7 +7,7 @@ public class BinarySearchTree {
     private Node root;
     private int size;
 
-    private class Node {
+    private static class Node {
         private String postcode;
         Node parent, left, right;
 
@@ -140,7 +140,7 @@ public class BinarySearchTree {
                 this.root = null; // Deleting the root
             } else if (result.isLeft) {
                 parent.left = null;
-                toDelete.postcode = null;
+                toDelete.parent = null;
             } else {
                 parent.right = null;
                 toDelete.postcode = null;
@@ -151,12 +151,11 @@ public class BinarySearchTree {
             Node child = (toDelete.left != null) ? toDelete.left : toDelete.right;
             if (parent == null) {
                 root = child; // setting root to the only child
+                toDelete.parent = null;
             } else if (result.isLeft) {
                 parent.left = child;
-                child.parent = null;
             } else {
                 parent.right = child;
-                child.parent = null;
             }
             child.parent = parent;
         }
@@ -222,9 +221,5 @@ public class BinarySearchTree {
                 return true;
             }
         } */
-    }
-
-    public boolean isEmpty() {
-        return this.size == 0;
     }
 }

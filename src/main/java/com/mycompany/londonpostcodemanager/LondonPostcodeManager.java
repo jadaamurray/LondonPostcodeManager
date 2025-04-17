@@ -44,7 +44,7 @@ public class LondonPostcodeManager {
         System.out.println("Count after delete: " + bst.count()); // Should be 2
 
         // Test InOrder after deletes
-        String[] deltedOrdered = bst.inOrder();
-        System.out.println("InOrder after delete: " + Arrays.toString(ordered));
+        String[] deletedOrdered = bst.inOrder();
+        System.out.println("InOrder after delete: " + Arrays.toString(deletedOrdered));
     }
 }
