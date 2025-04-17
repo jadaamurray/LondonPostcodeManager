@@ -3,6 +3,8 @@ package com.mycompany.londonpostcodemanager.terminal;
 import java.io.*;
 import java.util.Scanner;
 import com.mycompany.londonpostcodemanager.shared.PostcodeManagerInterface;
+import com.mycompany.londonpostcodemanager.shared.DeletablePostcodeManager;
+import com.mycompany.londonpostcodemanager.shared.ExtractablePostcodeManager;
 
 public class TerminalMenu {
     private final Scanner scanner = new Scanner(System.in);
@@ -57,13 +59,19 @@ public class TerminalMenu {
                     break;
 
                 case "4":
-                    try {
-                        String deleted = manager.delete();
-                        System.out.println(deleted != null ? "Deleted: " + deleted : "Nothing to delete.");
-                    } catch (Exception e) {
-                        System.out.println("Error deleting: " + e.getMessage());
+                    if (manager instanceof DeletablePostcodeManager treeManager) {
+                        System.out.print("Enter postcode to delete: ");
+                        String postcode = scanner.nextLine().trim().toUpperCase();
+                        boolean deleted = treeManager.delete(postcode);
+                        System.out.println(deleted ? "Deleted." : "Postcode not found.");
+                    } else if (manager instanceof ExtractablePostcodeManager heapManager) {
+                        String removed = heapManager.extractMinimum();
+                        System.out.println(removed != null ? "Deleted: " + removed : "Heap is empty.");
+                    } else {
+                        System.out.println("Delete operation not supported.");
                     }
                     break;
+
 
                 case "5":
                     System.out.print("Enter filename to save sorted postcodes (e.g., output.txt): ");

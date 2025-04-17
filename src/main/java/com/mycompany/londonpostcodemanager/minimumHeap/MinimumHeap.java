@@ -38,7 +38,6 @@ public class MinimumHeap implements PostcodeManagerInterface {
     }
 
     // Deletes and returns the minimum (alphabetically first) postcode
-    @Override
     public String delete() {
         return extractMinimum();
     }
@@ -65,7 +64,8 @@ public class MinimumHeap implements PostcodeManagerInterface {
     }
 
     // Removes and returns the root (minimum) element, then re-heapifies
-    private String extractMinimum() {
+    @Override
+    public String extractMinimum() {
         if (size == 0) return null;
 
         String min = heap[0];
