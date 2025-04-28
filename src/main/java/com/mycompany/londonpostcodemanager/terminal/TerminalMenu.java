@@ -78,8 +78,7 @@ public class TerminalMenu {
                     } while (!isValidPostcode(toAdd = scanner.nextLine().trim().toUpperCase()));
                     try {
                         manager.insert(toAdd);
-                        System.out.println("Postcode added.");
-                        break;
+                        //System.out.println("Postcode added.");
                     } catch (Exception e) {
                         System.out.println("Error: " + e.getMessage());
                     }
@@ -102,13 +101,15 @@ public class TerminalMenu {
                 }
 
                 case "5" -> {
-                    System.out.print("Enter postcode to search: ");
-                    String search = scanner.nextLine().trim().toUpperCase();
+                    String search;
+                    do {
+                        System.out.print("Enter postcode to search: ");
+                    } while (!isValidPostcode(search = scanner.nextLine().trim().toUpperCase()));
                     if (search.isEmpty()) {
                         System.out.println("Invalid input. Postcode cannot be empty.");
                     } else {
                         boolean found = manager.search(search);
-                        System.out.println(found ? "Postcode found." : "Postcode not found.");
+                        System.out.println(found ? "Postcode exists." : "Postcode not found.");
                     }
                 }
 
