@@ -14,7 +14,7 @@ All three implementations support the same core operations, allowing for direct 
 - Delete a postcode or Extract Min (for Min-Heap)
 - In order traversal
 - Count the number of postcodes stored
-- 
+
 **Benchmarking**
 - Time comparisons for insertions, searches, and deletions 
  
