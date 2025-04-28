@@ -37,7 +37,7 @@ public class MinimumHeap implements ExtractablePostcodeManager {
             heap[size] = postcode;
             heapifyUp(size);
             size++;
-            System.out.println("Postcode added.");
+//            System.out.println("Postcode added.");
         }
     }
 
