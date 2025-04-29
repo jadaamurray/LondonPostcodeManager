@@ -73,12 +73,15 @@ public class TerminalMenu {
 
                 case "3" -> {
                     String toAdd;
+                    int count = manager.count();
                     do {
                         System.out.print("Enter postcode to add: ");
                     } while (!isValidPostcode(toAdd = scanner.nextLine().trim().toUpperCase()));
                     try {
                         manager.insert(toAdd);
-                        //System.out.println("Postcode added.");
+                        if (manager.count()>count) {
+                            System.out.println("Postcode added.");
+                        }
                     } catch (Exception e) {
                         System.out.println("Error: " + e.getMessage());
                     }

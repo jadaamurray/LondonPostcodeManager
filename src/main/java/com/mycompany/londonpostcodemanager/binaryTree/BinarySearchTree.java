@@ -74,7 +74,6 @@ public class BinarySearchTree implements DeletablePostcodeManager {
             result.parent.right = newNode;
         }
         this.size++;
-        System.out.println("Postcode added.");
     }
 
     @Override
