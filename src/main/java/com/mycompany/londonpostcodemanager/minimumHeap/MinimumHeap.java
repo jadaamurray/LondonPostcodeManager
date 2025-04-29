@@ -2,13 +2,15 @@ package com.mycompany.londonpostcodemanager.minimumHeap;
 
 import com.mycompany.londonpostcodemanager.shared.ExtractablePostcodeManager;
 
+import java.util.Arrays;
+
 public class MinimumHeap implements ExtractablePostcodeManager {
 
     private String[] heap;
     private int size;
-    private final int maxSize;
+    private int maxSize;
 
-    // Constructor to initialize an empty heap
+    // Constructor to initialize an empty heap with a max size
     public MinimumHeap(int maxSize) {
         this.maxSize = maxSize;
         this.size = 0;
@@ -29,15 +31,16 @@ public class MinimumHeap implements ExtractablePostcodeManager {
         }
 
         if (size >= maxSize) {
-            throw new IllegalStateException("Cannot insert: Heap is full.");
+            // If the heap is full, increase the size dynamically
+            resizeHeap();
         }
+
         if (search(postcode)) {
-            System.out.println("Postcode " + postcode + " already exists");
+            System.out.println("Postcode " + postcode + " already exists.");
         } else {
             heap[size] = postcode;
             heapifyUp(size);
             size++;
-            System.out.println("Postcode added.");
         }
     }
 
@@ -79,6 +82,13 @@ public class MinimumHeap implements ExtractablePostcodeManager {
         return min;
     }
 
+    // Resizes the heap when full
+    private void resizeHeap() {
+        maxSize *= 2; // Double the capacity
+        heap = Arrays.copyOf(heap, maxSize);
+        System.out.println("Heap size increased to: " + maxSize);
+    }
+
     // Restores heap order from bottom to top after insert
     private void heapifyUp(int index) {
         int parent = (index - 1) / 2;
@@ -114,4 +124,3 @@ public class MinimumHeap implements ExtractablePostcodeManager {
         heap[j] = temp;
     }
 }
-
