@@ -16,38 +16,35 @@ public class MinimumHeapBenchmark {
     public static void main(String[] args) {
         int[] sizes = {1000, 2000, 4000, 8000, 16000};  // Test edilecek postkod sayıları
 
-        // Her boyut için benchmark işlemi yapılır
         for (int size : sizes) {
             String filename = size + "_London_Postcodes.txt";
             System.out.println("Benchmarking with file: " + filename);
 
             try {
-                // Dosyadan postkodları okuma işlemi
                 List<String> postcodes = readPostcodes(filename);
 
-                // MinimumHeap nesnesi oluşturuluyor
+                // creating new MinimumHeap
                 MinimumHeap heap = new MinimumHeap(size);
 
-                // Insert işlemi için benchmark
+                // Insert benchmark
                 benchmarkInsert(postcodes, heap);
 
-                // Rastgele bir postkodu arama işlemi için benchmark
+                // Search benchmark
                 benchmarkSearch(postcodes, heap);
 
-                // Rastgele bir postkodu silme işlemi için benchmark
+                // Delete benchmark
                 benchmarkDelete(heap);
 
                 System.out.println("---------------------------");
 
             } catch (FileNotFoundException e) {
-                System.err.println("Dosya bulunamadı: " + filename);
+                System.err.println("File not found: " + filename);
             } catch (IOException e) {
-                System.err.println("Bir hata oluştu: " + e.getMessage());
+                System.err.println(" Error: " + e.getMessage());
             }
         }
     }
 
-    // Dosyadan postkodları okuma metodu
     private static List<String> readPostcodes(String filename) throws IOException {
         InputStream inputStream = MinimumHeapBenchmark.class.getClassLoader().getResourceAsStream(filename);
         if (inputStream == null) {
@@ -58,7 +55,7 @@ public class MinimumHeapBenchmark {
                 .collect(Collectors.toList());
     }
 
-    // Insert işlemi için benchmark metodu
+    // Insert benchmark method
     private static void benchmarkInsert(List<String> postcodes, MinimumHeap heap) {
         long startTime = System.nanoTime();
         for (String postcode : postcodes) {
@@ -69,7 +66,7 @@ public class MinimumHeapBenchmark {
         System.out.printf("Postcodes inserted: %d | Time taken for insert: %.2f ms\n", postcodes.size(), durationMs);
     }
 
-    // Search işlemi için benchmark metodu
+    // Search benchmark method
     private static void benchmarkSearch(List<String> postcodes, MinimumHeap heap) {
         Random random = new Random();
         String randomPostcode = postcodes.get(random.nextInt(postcodes.size()));
@@ -81,7 +78,7 @@ public class MinimumHeapBenchmark {
         System.out.printf("Search for postcode '%s' | Found: %b | Time taken for search: %.2f ms\n", randomPostcode, found, durationMs);
     }
 
-    // Delete işlemi için benchmark metodu
+    // Delete benchmark method
     private static void benchmarkDelete(MinimumHeap heap) {
         long startTime = System.nanoTime();
         String deletedPostcode = heap.delete();
