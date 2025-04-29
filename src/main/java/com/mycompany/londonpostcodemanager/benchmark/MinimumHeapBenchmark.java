@@ -16,6 +16,7 @@ public class MinimumHeapBenchmark {
     public static void main(String[] args) {
         int[] sizes = {1000, 2000, 4000, 8000, 16000};  // Test edilecek postkod sayıları
 
+
         for (int size : sizes) {
             String filename = size + "_London_Postcodes.txt";
             System.out.println("Benchmarking with file: " + filename);
@@ -33,6 +34,7 @@ public class MinimumHeapBenchmark {
                 benchmarkSearch(postcodes, heap);
 
                 // Delete benchmark
+
                 benchmarkDelete(heap);
 
                 System.out.println("---------------------------");
@@ -44,7 +46,6 @@ public class MinimumHeapBenchmark {
             }
         }
     }
-
     private static List<String> readPostcodes(String filename) throws IOException {
         InputStream inputStream = MinimumHeapBenchmark.class.getClassLoader().getResourceAsStream(filename);
         if (inputStream == null) {

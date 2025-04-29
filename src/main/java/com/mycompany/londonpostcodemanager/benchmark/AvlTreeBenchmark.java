@@ -21,7 +21,9 @@ public class AvlTreeBenchmark {
             try {
                 List<String> postcodes = readPostcodes(filename);
                 if (postcodes.isEmpty()) {
+
                     System.out.println("File is empty.");
+
                     continue;
                 }
 
@@ -42,7 +44,9 @@ public class AvlTreeBenchmark {
     private static List<String> readPostcodes(String filename) throws Exception {
         InputStream inputStream = AvlTreeBenchmark.class.getClassLoader().getResourceAsStream(filename);
         if (inputStream == null) {
+
             throw new IllegalArgumentException("File could not be found: " + filename);
+
         }
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {

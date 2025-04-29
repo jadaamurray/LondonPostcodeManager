@@ -19,9 +19,11 @@ public class BinarySearchTreeBenchmark {
             System.out.println("Benchmarking with file: " + filename);
 
             try {
+
                 List<String> postcodes = readPostcodes(filename);
 
                 // creating BinarySearchTree
+
                 BinarySearchTree bst = new BinarySearchTree();
 
                 // Insert benchmark
@@ -31,6 +33,7 @@ public class BinarySearchTreeBenchmark {
                 benchmarkSearch(postcodes, bst);
 
                 // Using a random postcode to delete benchmark
+
                 benchmarkDelete(postcodes, bst);
 
                 System.out.println("---------------------------");
