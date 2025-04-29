@@ -17,40 +17,6 @@ public class TerminalMenu {
         this.manager = manager;
     }
 
-    private static boolean isValidPostcode(String postcode) {
-        if (postcode == null) {
-            System.out.println("Postcode cannot be empty.");
-            return false;
-        }
-
-        // London postcode regex pattern
-        String pattern = "^([A-Z][A-HJ-Y]?\\d[A-Z\\d]? ?\\d[A-Z]{2}|GIR ?0A{2})$";
-        Pattern londonPostcodePattern = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
-
-        // Format check
-        if (!londonPostcodePattern.matcher(postcode).matches()) {
-            System.out.println("Invalid format.");
-            return false;
-        }
-
-        // Additional London-specific checks
-        String outwardCode = postcode.split(" ")[0].toUpperCase();
-        String[] londonDistricts = {
-                "E", "EC", "N", "NW", "SE", "SW", "W", "WC",
-                "BR", "CM", "CR", "DA", "EN", "HA", "IG", "SL", "TN", "KT", "RM",
-                "SM", "TW", "UB", "WD"
-        };
-
-        for (String district : londonDistricts) {
-            if (outwardCode.startsWith(district)) return true;
-        }
-        System.out.println("Please enter a postcode that is within London.");
-
-
-        return false;
-
-    }
-
     public void start() {
         while (true) {
             System.out.println("\n--- Postcode Management Menu ---");
@@ -174,5 +140,37 @@ public class TerminalMenu {
         } catch (IOException e) {
             System.out.println("Error writing to file: " + e.getMessage());
         }
+    }
+
+    private static boolean isValidPostcode(String postcode) {
+        if (postcode == null) {
+            System.out.println("Postcode cannot be empty.");
+            return false;
+        }
+
+        // London postcode regex pattern
+        String pattern = "^([A-Z][A-HJ-Y]?\\d[A-Z\\d]? ?\\d[A-Z]{2}|GIR ?0A{2})$";
+        Pattern londonPostcodePattern = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
+
+        // Format check
+        if (!londonPostcodePattern.matcher(postcode).matches()) {
+            System.out.println("Invalid format.");
+            return false;
+        }
+
+        // Additional London-specific checks
+        String outwardCode = postcode.split(" ")[0].toUpperCase();
+        String[] londonDistricts = {
+                "E", "EC", "N", "NW", "SE", "SW", "W", "WC"
+        };
+
+        for (String district : londonDistricts) {
+            if (outwardCode.startsWith(district)) return true;
+        }
+        System.out.println("Please enter a postcode that is within London.");
+
+
+        return false;
+
     }
 }
