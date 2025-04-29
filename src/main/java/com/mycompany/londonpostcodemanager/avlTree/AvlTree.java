@@ -45,7 +45,6 @@ public class AvlTree implements DeletablePostcodeManager {
 
         if (!search(postcode)) {
             root = insert(root, postcode);
-//            System.out.println("Postcode added.");
         } else {
             System.out.println("Postcode " + postcode + " already exists");
         }

@@ -1,37 +1,50 @@
 package com.mycompany.londonpostcodemanager.benchmark;
 
-import com.mycompany.londonpostcodemanager.avlTree.AvlTreeTest;
-import com.mycompany.londonpostcodemanager.binaryTree.BstTest;
-import com.mycompany.londonpostcodemanager.minimumHeap.MinimumHeapTest;
+import com.mycompany.londonpostcodemanager.PostcodeFileLoader;
+import com.mycompany.londonpostcodemanager.avlTree.AvlTree;
+import com.mycompany.londonpostcodemanager.binaryTree.BinarySearchTree;
+import com.mycompany.londonpostcodemanager.minimumHeap.MinimumHeap;
+import com.mycompany.londonpostcodemanager.shared.PostcodeManagerInterface;
 
 public class BenchmarkTests {
 
-    private static final int RUNS = 1000;
+    private static final String[] FILES = {
+            "1000_London_Postcodes.txt",
+            "2000_London_Postcodes.txt",
+            "4000_London_Postcodes.txt",
+            "8000_London_Postcodes.txt",
+            "16000_London_Postcodes.txt"
+    };
 
     public static void main(String[] args) {
-        BenchmarkTests benchmark = new BenchmarkTests();
-        benchmark.runBenchmarks();
-    }
+        System.out.println("===================================================");
+        System.out.println("             Benchmarking Postcode Manager         ");
+        System.out.println("===================================================");
 
-    public void runBenchmarks() {
-        double avlTime = benchmark(() -> AvlTreeTest.main(null), "AvlTreeTest");
-        double bstTime = benchmark(() -> BstTest.main(null), "BstTest");
-        double heapTime = benchmark(() -> MinimumHeapTest.main(null), "MinimumHeapTest");
-
-        System.out.println("\n--- Benchmark Results (Average over " + RUNS + " runs) ---");
-        System.out.printf("AvlTreeTest.main() average time: %.2f ns = %.9f seconds\n", avlTime, avlTime / 1_000_000_000.0);
-        System.out.printf("BstTest.main() average time: %.2f ns = %.9f seconds\n", bstTime, bstTime / 1_000_000_000.0);
-        System.out.printf("MinimumHeapTest.main() average time: %.2f ns = %.9f seconds\n", heapTime, heapTime / 1_000_000_000.0);
-    }
-
-    private double benchmark(Runnable method, String methodName) {
-        long totalTime = 0;
-        for (int i = 0; i < RUNS; i++) {
-            long start = System.nanoTime();
-            method.run();
-            long end = System.nanoTime();
-            totalTime += (end - start);
+        for (String file : FILES) {
+            System.out.println("\n Benchmarking with file: " + file);
+            benchmarkStructure(new BinarySearchTree(), "BST", file);
+            benchmarkStructure(new AvlTree(), "AVL", file);
+            benchmarkStructure(new MinimumHeap(20000), "MinHeap", file);
         }
-        return (double) totalTime / RUNS;
+    }
+
+    private static void benchmarkStructure(PostcodeManagerInterface manager, String type, String file) {
+        System.out.printf("\n[%s] Testing with file: %s\n", type, file);
+
+        long startInsert = System.nanoTime();
+        PostcodeFileLoader.loadPostcodesFromResource(file, manager);
+        long endInsert = System.nanoTime();
+        double insertTimeMs = (endInsert - startInsert) / 1_000_000.0;
+
+        long startSearch = System.nanoTime();
+        boolean found = manager.search("E1 6AN"); // Random example postcode
+        long endSearch = System.nanoTime();
+        double searchTimeMs = (endSearch - startSearch) / 1_000_000.0;
+
+        System.out.printf("→ Insert Time: %.2f ms\n", insertTimeMs);
+        System.out.printf("→ Search Time (1 element): %.5f ms (found: %s)\n", searchTimeMs, found);
     }
 }
+
+

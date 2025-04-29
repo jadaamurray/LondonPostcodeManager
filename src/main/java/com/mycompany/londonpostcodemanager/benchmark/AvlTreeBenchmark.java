@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class AvlTreeBenchmark {
 
     public static void main(String[] args) {
-        int[] sizes = {1000, 2000, 4000, 8000, 16000};  // Test edilecek büyüklükler
+        int[] sizes = {1000, 2000, 4000, 8000, 16000};  // sizes that are tested
         for (int size : sizes) {
             String filename = size + "_London_Postcodes.txt";
             System.out.println("Benchmarking with file: " + filename);
@@ -21,7 +21,9 @@ public class AvlTreeBenchmark {
             try {
                 List<String> postcodes = readPostcodes(filename);
                 if (postcodes.isEmpty()) {
-                    System.out.println("Dosya boş veya okunamadı.");
+
+                    System.out.println("File is empty.");
+
                     continue;
                 }
 
@@ -42,7 +44,9 @@ public class AvlTreeBenchmark {
     private static List<String> readPostcodes(String filename) throws Exception {
         InputStream inputStream = AvlTreeBenchmark.class.getClassLoader().getResourceAsStream(filename);
         if (inputStream == null) {
-            throw new IllegalArgumentException("Dosya bulunamadı: " + filename);
+
+            throw new IllegalArgumentException("File could not be found: " + filename);
+
         }
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {

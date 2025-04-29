@@ -2,6 +2,7 @@ package com.mycompany.londonpostcodemanager.terminal;
 
 import java.io.*;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import com.mycompany.londonpostcodemanager.PostcodeFileLoader;
 import com.mycompany.londonpostcodemanager.shared.PostcodeManagerInterface;
@@ -37,24 +38,27 @@ public class TerminalMenu {
                 case "2" -> System.out.println("Total postcodes: " + manager.count());
 
                 case "3" -> {
-                    System.out.print("Enter postcode to add: ");
-                    String toAdd = scanner.nextLine().trim().toUpperCase();
-                    if (toAdd.isEmpty()) {
-                        System.out.println("Invalid postcode. Try again.");
-                    } else {
-                        try {
-                            manager.insert(toAdd);
+                    String toAdd;
+                    int count = manager.count();
+                    do {
+                        System.out.print("Enter postcode to add: ");
+                    } while (!isValidPostcode(toAdd = scanner.nextLine().trim().toUpperCase()));
+                    try {
+                        manager.insert(toAdd);
+                        if (manager.count()>count) {
                             System.out.println("Postcode added.");
-                        } catch (Exception e) {
-                            System.out.println("Error: " + e.getMessage());
                         }
+                    } catch (Exception e) {
+                        System.out.println("Error: " + e.getMessage());
                     }
                 }
 
                 case "4" -> {
                     if (manager instanceof DeletablePostcodeManager treeManager) {
-                        System.out.print("Enter postcode to delete: ");
-                        String postcode = scanner.nextLine().trim().toUpperCase();
+                        String postcode;
+                        do {
+                            System.out.print("Enter postcode to delete: ");
+                        } while (!isValidPostcode(postcode = scanner.nextLine().trim().toUpperCase()));
                         boolean deleted = treeManager.delete(postcode);
                         System.out.println(deleted ? "Deleted." : "Postcode not found.");
                     } else if (manager instanceof ExtractablePostcodeManager heapManager) {
@@ -66,13 +70,15 @@ public class TerminalMenu {
                 }
 
                 case "5" -> {
-                    System.out.print("Enter postcode to search: ");
-                    String search = scanner.nextLine().trim().toUpperCase();
+                    String search;
+                    do {
+                        System.out.print("Enter postcode to search: ");
+                    } while (!isValidPostcode(search = scanner.nextLine().trim().toUpperCase()));
                     if (search.isEmpty()) {
                         System.out.println("Invalid input. Postcode cannot be empty.");
                     } else {
                         boolean found = manager.search(search);
-                        System.out.println(found ? "Postcode found." : "Postcode not found.");
+                        System.out.println(found ? "Postcode exists." : "Postcode not found.");
                     }
                 }
 
@@ -134,5 +140,37 @@ public class TerminalMenu {
         } catch (IOException e) {
             System.out.println("Error writing to file: " + e.getMessage());
         }
+    }
+
+    private static boolean isValidPostcode(String postcode) {
+        if (postcode == null) {
+            System.out.println("Postcode cannot be empty.");
+            return false;
+        }
+
+        // London postcode regex pattern
+        String pattern = "^([A-Z][A-HJ-Y]?\\d[A-Z\\d]? ?\\d[A-Z]{2}|GIR ?0A{2})$";
+        Pattern londonPostcodePattern = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
+
+        // Format check
+        if (!londonPostcodePattern.matcher(postcode).matches()) {
+            System.out.println("Invalid format.");
+            return false;
+        }
+
+        // Additional London-specific checks
+        String outwardCode = postcode.split(" ")[0].toUpperCase();
+        String[] londonDistricts = {
+                "E", "EC", "N", "NW", "SE", "SW", "W", "WC"
+        };
+
+        for (String district : londonDistricts) {
+            if (outwardCode.startsWith(district)) return true;
+        }
+        System.out.println("Please enter a postcode that is within London.");
+
+
+        return false;
+
     }
 }

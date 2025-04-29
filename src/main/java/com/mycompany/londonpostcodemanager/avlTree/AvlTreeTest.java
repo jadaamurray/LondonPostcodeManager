@@ -3,6 +3,8 @@ package com.mycompany.londonpostcodemanager.avlTree;
 public class AvlTreeTest {
     public static void main(String[] args) {
         AvlTree tree = new AvlTree();
+        System.out.println("=== AVL Tree Basic API Test Program ===");
+
 
         // Insert postcodes
         tree.insert("W1A 1AA");
@@ -37,5 +39,7 @@ public class AvlTreeTest {
 
         // Final count
         System.out.println("Final postcode count: " + tree.count());
+
+        System.out.println("=== End of Test ===");
     }
 }

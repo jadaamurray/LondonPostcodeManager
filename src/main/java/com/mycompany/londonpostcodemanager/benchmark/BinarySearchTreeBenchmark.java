@@ -19,19 +19,21 @@ public class BinarySearchTreeBenchmark {
             System.out.println("Benchmarking with file: " + filename);
 
             try {
-                // Dosyayı okuyarak postkodları alıyoruz
+
                 List<String> postcodes = readPostcodes(filename);
 
-                // BinarySearchTree nesnesi oluşturuluyor
+                // creating BinarySearchTree
+
                 BinarySearchTree bst = new BinarySearchTree();
 
                 // Insert benchmark
                 benchmarkInsert(postcodes, bst);
 
-                // Random bir postkodu search benchmark
+                // Using a random postcode to search benchmark
                 benchmarkSearch(postcodes, bst);
 
-                // Random bir postkodu delete benchmark
+                // Using a random postcode to delete benchmark
+
                 benchmarkDelete(postcodes, bst);
 
                 System.out.println("---------------------------");
@@ -42,7 +44,6 @@ public class BinarySearchTreeBenchmark {
         }
     }
 
-    // Postkodları dosyadan okuma metodu
     private static List<String> readPostcodes(String filename) throws Exception {
         InputStream inputStream = BinarySearchTreeBenchmark.class.getClassLoader().getResourceAsStream(filename);
         if (inputStream == null) {
@@ -53,7 +54,7 @@ public class BinarySearchTreeBenchmark {
                 .collect(Collectors.toList());
     }
 
-    // Insert işlemi için benchmark metodu
+    // Insert benchmark method
     private static void benchmarkInsert(List<String> postcodes, BinarySearchTree bst) {
         long startTime = System.nanoTime();
         for (String postcode : postcodes) {
@@ -64,7 +65,7 @@ public class BinarySearchTreeBenchmark {
         System.out.printf("Postcodes inserted: %d | Time taken for insert: %.2f ms\n", postcodes.size(), durationMs);
     }
 
-    // Search işlemi için benchmark metodu
+    // Search benchmark method
     private static void benchmarkSearch(List<String> postcodes, BinarySearchTree bst) {
         Random random = new Random();
         String randomPostcode = postcodes.get(random.nextInt(postcodes.size()));
@@ -76,7 +77,7 @@ public class BinarySearchTreeBenchmark {
         System.out.printf("Search for postcode '%s' | Found: %b | Time taken for search: %.2f ms\n", randomPostcode, found, durationMs);
     }
 
-    // Delete işlemi için benchmark metodu
+    // Delete benchmark method
     private static void benchmarkDelete(List<String> postcodes, BinarySearchTree bst) {
         Random random = new Random();
         String randomPostcode = postcodes.get(random.nextInt(postcodes.size()));
